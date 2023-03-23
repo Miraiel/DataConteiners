@@ -1,23 +1,44 @@
 ﻿#include<iostream>
 using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
+#define tab "\t";
 
 
 void FillRand(int arr[], const int n);							//функция задает массив на n элементов
+void FillRand(int** arr, const int rows, const int cols);
+
 void Print(int arr[], const int n);								//функция вывода массива на n элементов
+void Print(int** arr, const int rows, const int cols);
 
 int* Push_Back(int arr[], int& n, int value);					//функция добавления значение в конец массива
+int** Push_row_Back(int** arr, int& rows, int& cols);
+
 int* Push_Front(int arr[], int& n, int value);					//функция добавления значение в начало массива
+
+
 int* Insert(int arr[], int& n, int value, int index);			//функция добавляет значение в массив по заданному индексу
 
 int* Pop_Back(int arr[], int& n);								//функция удаляет последний элемент массива
+
 int* Pop_Front(int arr[], int& n);								//функция удаляет нулевой элемент массива
+
 int* Erase(int arr[], int& n, int value, int index);			//функция удаляет элемент из массива по заданному индексу
 
+//------------------------------------------------------------------------------------------------------------------------//
+
+
+
+//#define DYNAMIC_MEMORY_1
+//#define FANCTIONS_DYNAMIC_MEMORY_1
+#define DYNAMIC_MEMORY_2
 
 void main()
 {
 	setlocale(LC_ALL, "");
 
+#ifdef DYNAMIC_MEMORY
 	cout << "1. Добавления значение в конец массива" << endl;
 	cout << "2. Добавления значение в начало массива" << endl;
 	cout << "3. Добавления значение в массив по заданному индексу" << endl;
@@ -97,7 +118,6 @@ void main()
 
 
 	delete[]arr;												//очищение выделеной памяти
-
 	/*
 		//создать новый массив нужного размера
 		int* buffer = new int [n + 1] {};						//на 1 элемент больше
@@ -115,8 +135,44 @@ void main()
 		//после добавления элемента в массив, количество его элементов увеличивается на 1
 		n++;
 	*/
+#endif DYNAMIC_MEMORY
+
+	int rows;
+	int cols;
+	
+	cout << "Введите количество строк: "; cin >> rows;
+	cout << "Введите количество столбцов: "; cin >> cols;
+
+	int** arr = new int* [rows];									//создаем массив указателей
+
+	//выделяем память под строки, и адрес строк записываем в элементы массива указателей
+	for (int i = 0; i < rows; i++)
+	{
+		arr[i] = new int[cols];
+	}
+
+	FillRand(arr, rows, cols);
+	Print(arr, rows, cols);
+
+
+	arr = Push_row_Back(arr, rows, cols);
+	Print(arr, rows, cols);
+
+	arr = Push_row_Back(arr, rows, cols);
+	Print(arr, rows, cols);
+
+	//сначала удаляем строки ДДМ
+	for (int i = 0; i < rows; i++)
+	{
+		delete[]arr[i];
+	}
+
+	//удаляем массив указателей
+	delete[] arr;
 
 }
+
+#ifdef FANCTIONS_DYNAMIC_MEMORY_1
 
 void FillRand(int arr[], const int n)
 {
@@ -221,3 +277,48 @@ int* Erase(int arr[], int& n, int value, int index)
 	return buffer;
 }
 
+#endif // FANCTIONS_DYNAMIC_MEMORY_1
+
+void FillRand(int** arr, const int rows, const int cols)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			arr[i][j] = rand() % 100;
+		}
+	}
+}
+
+void Print(int** arr, const int rows, const int cols)
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			cout << arr[i][j] << tab;
+		}
+		cout << endl;
+	}
+}
+
+int** Push_row_Back(int** arr, int& rows, int& cols)
+{
+	int** buffer = new int* [rows + 1];
+	for (int i = 0; i < rows; i++)								//заносим адреса строк в массив указателей
+	{
+		buffer[i] = arr[i];
+	}
+
+	buffer[rows] = new int[cols];								//выделяем память под новую строку и добавляем ее в массив указателей
+
+	for (int j = 0; j < cols; j++)								//вводим числа для добавления в строку
+	{
+		cin>>buffer[rows][j];
+	}
+
+	delete[]arr;												//освобождаем память
+	rows++;
+	arr = buffer;
+	return buffer;	
+}
