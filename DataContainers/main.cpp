@@ -114,7 +114,7 @@ void main()
 	cout << "Введите количество строк: "; cin >> rows;
 	cout << "Введите количество столбцов: "; cin >> cols;
 
-	double** arr = Allocate<double>(rows, cols);									//создаем массив указателей
+	double** arr = Allocate<double>(rows, cols);																	//создаем массив указателей
 
 	FillRand(arr, rows, cols);
 	Print(arr, rows, cols);
