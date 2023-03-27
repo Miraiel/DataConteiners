@@ -51,9 +51,7 @@ public:
 
 	void push_back(int Data)
 	{
-		Element* New = new Element(Data);
-	
-		New->pNext = New;
+		
 		
 	}
 
