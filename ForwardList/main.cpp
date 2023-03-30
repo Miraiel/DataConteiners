@@ -130,7 +130,6 @@ public:
 
 		Temp= Temp->pNext;
 		Temp->pNext = Erased;
-
 	
 		size--;
 	}
