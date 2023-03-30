@@ -2,33 +2,41 @@
 using namespace std;
 
 #define tab "\t"
+#define delimeter "\n-------------------------------------------\n"
 
 class Element
 {
 	int Data;		//значение элемента
 	Element* pNext; //адрес следующего элемента
+	static int count;
 
 public:
 	Element(int Data, Element* pNext = nullptr) : Data(Data), pNext(pNext)
 	{
+		count++;
 		cout << "EConstructor: \t" << this << endl;
 	}
 	~Element()
 	{
+		count--;
 		cout << "EDestructor: \t" << this << endl;
 	}
 	friend class ForwardList;
 };
 
+int Element::count = 0;
+
 class ForwardList
 {
 	Element* Head;
+	unsigned int size;
 
 public:
 
 	ForwardList()
 	{
 		Head = nullptr; // если список пуст его голова указывает на ноль
+		size = 0;
 		cout << "LConstructor: \t" << this << endl;
 	}
 	~ForwardList()
@@ -40,45 +48,98 @@ public:
 
 	void push_front(int Data)
 	{
+		/*
 		Element* New = new Element(Data);	//создаем новый элемент
 
 		New->pNext = Head;					//новый элемент должен указывать на начало списка
 
 		Head = New;							//переводим √олову списка на новый элемент
+		*/
 
+		Head = new Element(Data, Head);
+		size++;
 
 	}
 
 	void push_back(int Data)
 	{
-		
-		
+		if (Head == nullptr)return push_front(Data);
+
+		Element* New = new Element(Data);
+		Element* Temp = Head;
+
+		while (Temp->pNext != nullptr)
+		{
+			Temp = Temp->pNext;
+		}
+		Temp->pNext = New; +size++;
+
 	}
+
+	void insert(int Data, int index)			//вставл€ет значение в список по указанному индексу
+	{
+		if (index == 0)return push_front(Data);
+		if (index > size)return;
+		Element* New = new Element(Data);
+		Element* Temp = Head;
+
+		for (int i = 0; i < index - 1; i++)Temp = Temp->pNext;
+
+		New->pNext = Temp->pNext;
+		Temp->pNext = New;
+		size++;
+	}
+
+	//---------------------Removing elements-----------------------------
 
 	void pop_front()
 	{
+		Element* Erased = Head;
+		Head = Head->pNext;
+
+		delete Erased;
+		size--;
 
 	}
 
 	void pop_back()
 	{
+		Element* Temp = Head;
 
+		while (Temp->pNext->pNext != nullptr)
+		{
+			Temp = Temp->pNext;
+		}
+		delete Temp->pNext;
+		Temp->pNext = nullptr;
+		size--;
 	}
 
-	void insert()			//вставл€ет значение в список по указанному индексу
+	void erase(int index)		   //удал€ет значение из списка по указанному индексу
 	{
+		if (index > size)return;
+		Element* Temp = Head;
+		Element* Erased = Head->pNext;
 
+		for (int i = 0; i < index - 1; i++)
+		{
+			Temp = Temp->pNext;
+			Erased = Temp->pNext->pNext;
+		}
+		delete Temp->pNext;
+
+		Temp= Temp->pNext;
+		Temp->pNext = Erased;
+
+	
+		size--;
 	}
 
-	void erase()		   //удал€ет значение из списка по указанному индексу
-	{
-
-	}
 	//-------------------------Methods-----------------------------------
 	void print()const
 	{
 		Element* Temp = Head;
-		/*Temp - итератор (указаель при помощи которого 
+		/*Temp - итератор (указаель при помощи которого
 		можно получить доступ к элементам структуры данных)*/
 		while (Temp)
 		{
@@ -86,6 +147,8 @@ public:
 			Temp = Temp->pNext;
 
 		}
+		cout << " оличество элементов списка: " << size << endl; 
+		cout << "ќбщее количество элементов: " <<Element::count << endl;
 	}
 
 };
@@ -104,4 +167,32 @@ void main()
 		list.push_back(rand() % 100);
 	}
 	list.print();
+	cout << delimeter << endl;
+	//list.pop_front();
+	//list.print();
+	//cout << delimeter << endl;
+	//list.pop_back();
+	//list.print();
+	//list.push_back(123);
+	//list.print();
+	int index;
+	int value;
+
+	cout << "¬едите индекс элемента: "; cin >> index;
+	cout << "¬ведите значение: "; cin >> value;
+	list.insert(value, index);
+	list.print();
+
+	cout << delimeter << endl;
+	cout << "¬едите индекс элемента: "; cin >> index;
+	list.erase(index);
+	list.print();
+	cout << delimeter << endl;
+
+	ForwardList list2;
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
+	list2.print();
+
 }
