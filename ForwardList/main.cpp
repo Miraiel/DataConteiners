@@ -25,10 +25,51 @@ public:
 		count--;
 		cout << "EDestructor: \t" << this << endl;
 	}
+
 	friend class ForwardList;
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
+	friend class Iterator;
+
 };
 
 int Element::count = 0;
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp) : Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+
+	~Iterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+
+	bool operator==(const Iterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	
+	bool operator!=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+
+	int& operator*()
+	{
+		return Temp->Data;
+	}
+
+};
 
 class ForwardList
 {
@@ -37,14 +78,46 @@ class ForwardList
 
 public:
 
+	Iterator begin()
+	{
+		return Head;
+	}
+
+	Iterator end()
+	{
+		return nullptr;
+	}
+
+
 	ForwardList()
 	{
 		Head = nullptr; // если список пуст его голова указывает на ноль
 		size = 0;
 		cout << "LConstructor: \t" << this << endl;
 	}
+
+	ForwardList(initializer_list<int> il) :ForwardList()
+	{
+		cout << typeid(il.begin()).name() << endl;
+		for (int const* it = il.begin(); it != il.end(); it++)
+		{
+			push_back(*it);
+		}
+	}
+
+	ForwardList(const ForwardList& other) :ForwardList()
+	{
+		*this = other;
+	}
+
+	ForwardList(ForwardList&& other) :ForwardList()
+	{
+		*this = std::move(other);
+	}
+
 	~ForwardList()
 	{
+		while (Head)pop_front();
 		cout << "LDestructor: \t" << this << endl;
 	}
 
@@ -121,6 +194,7 @@ public:
 
 	void erase(int index)		   //удаляет значение из списка по указанному индексу
 	{
+		/*
 		if (index == 0)return pop_front();
 		if (index > size)return;
 		Element* Temp = Head;
@@ -134,16 +208,26 @@ public:
 		delete Temp->pNext;
 
 		Temp->pNext = Erased;
+		*/
 
+		if (index == 0)return pop_front();
+		if (index > size)return;
+		//доходим до элемента перед удаляемым
+		Element* Temp = Head;
+		for (int i = 0; i < index - 1; i++)Temp = Temp->pNext;
+		//запоминаем адрес удаляемого элеменрта
+		Element* Erased = Temp->pNext;
+		Temp->pNext = Temp->pNext->pNext;
+		delete Erased;
 
 		size--;
 	}
 
 	//------------------------Operators----------------------------------
 
-	ForwardList& operator=(const ForwardList& list)
+	ForwardList& operator=(const ForwardList& other)
 	{
-		Element* Temp = list.Head;
+		/*Element* Temp = list.Head;
 		int i = 0;
 
 		while (i < list.size)
@@ -151,8 +235,22 @@ public:
 			this->push_back(Temp->Data);
 			Temp = Temp->pNext;
 		}
+		*/
+		if (this == &other)return *this;
+		while (Head)pop_front();
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);
+		return *this;
+	}
 
-		delete Temp;
+	ForwardList& operator=(ForwardList&& other)
+	{
+		if (this == &other)return *this;
+		while (Head)pop_front();
+		this->Head = other.Head;
+		this->size = other.size;
+		other.Head = nullptr;
+		other.size = 0;
 		return *this;
 	}
 
@@ -171,18 +269,36 @@ public:
 		cout << "Количество элементов списка: " << size << endl;
 		cout << "Общее количество элементов: " << Element::count << endl;
 	}
-
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
-/*
-ForwardList operator+(const ForwardList& obj)
-{
 
+
+ForwardList operator+(const ForwardList& left, const ForwardList& right)
+{
+	ForwardList cat = left;
+	for (Element* Temp = right.Head; Temp; Temp = Temp->pNext)
+		cat.push_back(Temp->Data);
+	return cat;
 }
-*/
+
+void print(const ForwardList& list)
+{
+	for (int i : list)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+}
+
+//#define BASE_CHECK
+//#define OPERATOR_PLUS
+//#define RANGE_BASED_FOR_ARRAY
+
 void main()
 {
 	setlocale(LC_ALL, "");
 
+#ifdef BASE_CHECK
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
 	ForwardList list;
@@ -213,6 +329,7 @@ void main()
 	list.erase(index);
 	list.print();
 
+
 	cout << delimeter << endl;
 	ForwardList list2;
 	list2.push_back(34);
@@ -220,8 +337,44 @@ void main()
 	list2.push_back(89);
 	list2.print();
 
+#endif // BASE_CHECK
+
+#ifdef OPERATOR_PLUS
+	ForwardList list1;
+	list1.push_back(3);
+	list1.push_back(5);
+	list1.push_back(8);
+	list1.push_back(13);
+	list1.push_back(21);
+
+	ForwardList list2;
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
+
 	cout << delimeter << endl;
-	ForwardList list3 = list + list2;
+	ForwardList list3;
+	cout << delimeter << endl;
+	list3 = list1 + list2;
 	list3.print();
+#endif // OPERATOR_PLUS
+
+#ifdef RANGE_BASED_FOR_ARRAY
+	int arr[] = { 3,5,8,13,21 };
+	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+	{
+		cout << arr[i] << tab;
+	}
+	cout << endl;
+
+	for (int i : arr)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+#endif // RANGE_BASED_FOR_ARRAY
+
+	ForwardList list = { 3,5,8,13,21 };
+	//list.print();
 
 }
