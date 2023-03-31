@@ -140,8 +140,21 @@ public:
 	}
 
 	//------------------------Operators----------------------------------
-	
-	
+
+	ForwardList& operator=(const ForwardList& list)
+	{
+		Element* Temp = list.Head;
+		int i = 0;
+
+		while (i < list.size)
+		{
+			this->push_back(Temp->Data);
+			Temp = Temp->pNext;
+		}
+
+		delete Temp;
+		return *this;
+	}
 
 	//-------------------------Methods-----------------------------------
 	void print()const
@@ -160,7 +173,12 @@ public:
 	}
 
 };
+/*
+ForwardList operator+(const ForwardList& obj)
+{
 
+}
+*/
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -194,12 +212,16 @@ void main()
 	cout << "Ведите индекс элемента: "; cin >> index;
 	list.erase(index);
 	list.print();
-	cout << delimeter << endl;
 
+	cout << delimeter << endl;
 	ForwardList list2;
 	list2.push_back(34);
 	list2.push_back(55);
 	list2.push_back(89);
 	list2.print();
+
+	cout << delimeter << endl;
+	ForwardList list3 = list + list2;
+	list3.print();
 
 }
