@@ -1,6 +1,10 @@
 #include<iostream>
 using namespace std;
 
+using std::cout;
+using std::cin;
+using std::endl;
+
 #define tab "\t"
 #define delimeter "\n-------------------------------------------\n"
 
@@ -117,6 +121,7 @@ public:
 
 	void erase(int index)		   //удаляет значение из списка по указанному индексу
 	{
+		if (index == 0)return pop_front();
 		if (index > size)return;
 		Element* Temp = Head;
 		Element* Erased = Head->pNext;
@@ -128,11 +133,15 @@ public:
 		}
 		delete Temp->pNext;
 
-		Temp= Temp->pNext;
 		Temp->pNext = Erased;
-	
+
+
 		size--;
 	}
+
+	//------------------------Operators----------------------------------
+	
+	
 
 	//-------------------------Methods-----------------------------------
 	void print()const
@@ -146,12 +155,11 @@ public:
 			Temp = Temp->pNext;
 
 		}
-		cout << "Количество элементов списка: " << size << endl; 
-		cout << "Общее количество элементов: " <<Element::count << endl;
+		cout << "Количество элементов списка: " << size << endl;
+		cout << "Общее количество элементов: " << Element::count << endl;
 	}
 
 };
-
 
 void main()
 {
