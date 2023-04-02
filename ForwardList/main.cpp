@@ -9,6 +9,7 @@ using std::endl;
 #define tab "\t"
 #define delimeter "\n-------------------------------------------\n"
 
+template<typename T> class Element;
 template<typename T> class ForwardList<T>;
 template<typename T> ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 template<typename T> class ConstIterator<T>;
