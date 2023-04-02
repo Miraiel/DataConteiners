@@ -1,4 +1,5 @@
 ﻿#include<iostream>
+#include<ctime>
 using namespace std;
 
 using std::cout;
@@ -18,21 +19,59 @@ public:
 	Element(int Data, Element* pNext = nullptr) : Data(Data), pNext(pNext)
 	{
 		count++;
-		cout << "EConstructor: \t" << this << endl;
+		//cout << "EConstructor: \t" << this << endl;
 	}
 	~Element()
 	{
 		count--;
-		cout << "EDestructor: \t" << this << endl;
+		//	cout << "EDestructor: \t" << this << endl;
 	}
 
 	friend class ForwardList;
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
+	friend class ConstIterator;
 	friend class Iterator;
 
 };
 
 int Element::count = 0;
+
+class ConstIterator
+{
+	Element* Temp;
+public:
+	ConstIterator(Element* Temp) : Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+
+	~ConstIterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+
+	ConstIterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+
+	bool operator==(const ConstIterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+
+	bool operator!=(const ConstIterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+
+	const int& operator*()const
+	{
+		return Temp->Data;
+	}
+
+};
 
 class Iterator
 {
@@ -58,7 +97,7 @@ public:
 	{
 		return this->Temp == other.Temp;
 	}
-	
+
 	bool operator!=(const Iterator& other)const
 	{
 		return this->Temp != other.Temp;
@@ -88,6 +127,15 @@ public:
 		return nullptr;
 	}
 
+	const ConstIterator begin()const
+	{
+		return Head;
+	}
+
+	const ConstIterator end()const
+	{
+		return nullptr;
+	}
 
 	ForwardList()
 	{
@@ -239,7 +287,9 @@ public:
 		if (this == &other)return *this;
 		while (Head)pop_front();
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-			push_back(Temp->Data);
+			//push_back(Temp->Data);
+			push_front(Temp->Data);
+		reverse();
 		return *this;
 	}
 
@@ -269,6 +319,19 @@ public:
 		cout << "Количество элементов списка: " << size << endl;
 		cout << "Общее количество элементов: " << Element::count << endl;
 	}
+	void reverse()
+	{
+		ForwardList buffer;
+		while (Head)
+		{
+			buffer.push_front(Head->Data);
+			pop_front();
+		}
+		this->Head = buffer.Head;
+		buffer.Head = nullptr;
+
+	}
+
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
 
@@ -281,10 +344,12 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 	return cat;
 }
 
+
 void print(const ForwardList& list)
 {
-	for (int i : list)
+	for (const int& i : list)
 	{
+		//i *= 10;
 		cout << i << tab;
 	}
 	cout << endl;
@@ -293,6 +358,7 @@ void print(const ForwardList& list)
 //#define BASE_CHECK
 //#define OPERATOR_PLUS
 //#define RANGE_BASED_FOR_ARRAY
+//#define RANGE_BASE_FOR_LIST
 
 void main()
 {
@@ -374,7 +440,36 @@ void main()
 	cout << endl;
 #endif // RANGE_BASED_FOR_ARRAY
 
+#ifdef RANGE_BASE_FOR_LIST
 	ForwardList list = { 3,5,8,13,21 };
+	/*for (int i : list)
+	{
+		//i *= 10;
+		cout << i << tab;
+	}*/
+	cout << endl;
+	print(list);
+	list.print();
+#endif // RANGE_BASE_FOR_LIST
+
+	int n;
+	cout << "Введите размер списка: "; cin >> n;
+	clock_t start = clock();
+	ForwardList list;
+	for (int i = 0; i < n; i++)
+	{
+		list.push_front(rand() % 100);
+	}
+	clock_t end = clock();
+	double delta = double(end - start) / CLOCKS_PER_SEC;
+	cout << "Список заполнен за: " << delta << "секунд" << endl;
 	//list.print();
+	start = clock();
+	ForwardList list2 = list;
+	end = clock();
+	delta = double(end - start) / CLOCKS_PER_SEC;
+	cout << "Список скопирован" << delta << "секунд" << endl;
+	//list2.print();
+
 
 }
