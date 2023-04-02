@@ -470,6 +470,4 @@ void main()
 	delta = double(end - start) / CLOCKS_PER_SEC;
 	cout << "Список скопирован" << delta << "секунд" << endl;
 	//list2.print();
-
-
 }
