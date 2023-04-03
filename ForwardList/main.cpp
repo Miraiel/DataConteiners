@@ -9,10 +9,10 @@ using std::endl;
 #define tab "\t"
 #define delimeter "\n-------------------------------------------\n"
 
-template<typename T> class ForwardList<T>;
+template<typename T> class ForwardList;
+template<typename T> class ConstIterator;
+template<typename T> class Iterator;
 template<typename T> ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
-template<typename T> class ConstIterator<T>;
-template<typename T> class Iterator<T>;
 
 template<typename T> class Element
 {
@@ -193,14 +193,15 @@ public:
 	{
 		if (Head == nullptr)return push_front(Data);
 
-		Element<T>* New = new Element<T>(Data);
+		//Element<T>* New = new Element<T>(Data);
 		Element<T>* Temp = Head;
 
 		while (Temp->pNext != nullptr)
 		{
 			Temp = Temp->pNext;
 		}
-		Temp->pNext = New; +size++;
+		Temp->pNext = new Element<T>(Data); 
+		size++;
 
 	}
 
@@ -274,6 +275,19 @@ public:
 		size--;
 	}
 
+	void reverse()
+	{
+		ForwardList<T> buffer;
+		while (Head)
+		{
+			buffer.push_front(Head->Data);
+			pop_front();
+		}
+		this->Head = buffer.Head;
+		buffer.Head = nullptr;
+
+	}
+
 	//------------------------Operators----------------------------------
 
 	ForwardList<T>& operator=(const ForwardList<T>& other)
@@ -321,18 +335,6 @@ public:
 		}
 		cout << "Количество элементов списка: " << size << endl;
 		cout << "Общее количество элементов: " << Element<T>::count << endl;
-	}
-	void reverse()
-	{
-		ForwardList<T> buffer;
-		while (Head)
-		{
-			buffer.push_front(Head->Data);
-			pop_front();
-		}
-		this->Head = buffer.Head;
-		buffer.Head = nullptr;
-
 	}
 
 	friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
@@ -475,7 +477,7 @@ void main()
 	//list2.print();
 #endif // PREFORMANCE_TECT
 
-	ForwardList<int> i_list = { 3,5,8,13,21 };
+	ForwardList<int> i_list = { 3, 5, 8, 13, 21 };
 	for (int i : i_list)cout << i << tab; cout << endl;
 
 	ForwardList<double> d_list = { 2.7, 3.14, 5.1, 8.3 };
