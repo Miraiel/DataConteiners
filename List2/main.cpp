@@ -1,6 +1,10 @@
 #include<iostream>
 using namespace std;
 
+using std::cin;
+using std::cout;
+using std::endl;
+
 #define tab "\t"
 #define delimeter "\n------------------\n"
 
@@ -22,11 +26,58 @@ class List
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class List;
+		friend class Iterator;
+		friend class ConstIterator;
 	}*Head, * Tail;
+
+	class Iterator
+	{
+		Element* Temp;
+	public:
+		Iterator(Element* Temp) :Temp(Temp)
+		{
+			cout << "ITConstructor:\t" << this << endl;
+		}
+		~Iterator()
+		{
+			cout << "ITDestructor:\t" << this << endl;
+		}
+
+		bool operator!=(const Iterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+
+		Iterator& operator++()
+		{
+			Temp = Temp->pNext;
+			Temp = Temp->pPrev;
+			return *this;
+		}
+
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+
+	class ConstIterator
+	{
+		Element* Temp;
+	public:
+		ConstIterator(Element* Temp) :Temp(Temp)
+		{
+			cout << "ITConstructor:\t" << this << endl;
+		}
+		~ConstIterator()
+		{
+			cout << "ITDestructor:\t" << this << endl;
+		}
+	};
 
 	size_t size;
 public:
-	/*
+
 	Iterator begin()
 	{
 		return Head;
@@ -46,13 +97,21 @@ public:
 	{
 		return Tail;
 	}
-	*/
 
 	List()
 	{
 		Head = Tail = nullptr;
 		size = 0;
 		cout << "LConstructor:\t" << this << endl;
+	}
+
+	List(initializer_list<int> il) :List()
+	{
+		cout << typeid(il.begin()).name() << endl;
+		for (int const* it = il.begin(); it != il.end(); it++)
+		{
+			push_back(*it);
+		}
 	}
 
 	List(const List& other) :List()
@@ -80,9 +139,9 @@ public:
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_back(Temp->Data);
 
-		while (Tail)pop_back();
+		/*while (Tail)pop_back();
 		for (Element* Temp = other.Tail; Temp; Temp = Temp->pPrev)
-			push_front(Temp->Data);
+			push_front(Temp->Data);*/
 
 		return *this;
 	}
@@ -109,11 +168,10 @@ public:
 		if (Head == nullptr && Tail == nullptr)
 		{
 			Head = Tail = new Element(Data);
-
 		}
 		else
 		{
-
+			/*
 			//создаем новый элемент
 			Element* New = new Element(Data);
 			//пристыковываем новый элемент к списку
@@ -122,8 +180,8 @@ public:
 			Head->pPrev = New;
 			//пееводим голову на новый элеемнт
 			Head = New;
-
-			//Head = new Element(Data, Head, );
+			*/
+			Head = new Element(Data, Head, Tail);
 		}
 		size++;
 	}
@@ -236,10 +294,11 @@ public:
 void main()
 {
 	setlocale(LC_ALL, "");
+
+#ifdef METHODS_INSERT_ERESE
 	int n;
 	cout << "¬ведите размер списка: "; cin >> n;
 
-#ifdef METHODS_INSERT_ERESE
 
 	List list;
 	for (int i = 0; i < n; i++)
@@ -249,7 +308,6 @@ void main()
 	list.print();
 	cout << delimeter << endl;
 	list.reverse_print();
-
 
 	int value;
 	int index;
@@ -268,12 +326,15 @@ void main()
 
 #endif // METHODS_INSERT_ERESE
 
-
 	List list = { 3, 5, 8, 13, 21 };
-	/*for (int i : list)
+	for (int i : list)
 	{
 		cout << i << tab;
 	}
 	cout << endl;
-	*/
+
+	list.print();
+	cout << delimeter << endl;
+	list.reverse_print();
+
 }
