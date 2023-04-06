@@ -26,12 +26,43 @@ class List
 
 	size_t size;
 public:
-	
+	/*
+	Iterator begin()
+	{
+		return Head;
+	}
+
+	Iterator end()
+	{
+		return Tail;
+	}
+
+	const ConstIterator begin()const
+	{
+		return Head;
+	}
+
+	const ConstIterator end()const
+	{
+		return Tail;
+	}
+	*/
+
 	List()
 	{
 		Head = Tail = nullptr;
 		size = 0;
 		cout << "LConstructor:\t" << this << endl;
+	}
+
+	List(const List& other) :List()
+	{
+		*this = other;
+	}
+
+	List(List&& other) : List()
+	{
+		*this = move(other);
 	}
 
 	~List()
@@ -40,7 +71,37 @@ public:
 		while (Tail)pop_back();
 		cout << "LDesturctor:\t" << this << endl;
 	}
-	
+	//------------------------Operator------------------------------
+
+	List& operator=(const List& other)
+	{
+		if (this == &other)return *this;
+		while (Head)pop_front();
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);
+
+		while (Tail)pop_back();
+		for (Element* Temp = other.Tail; Temp; Temp = Temp->pPrev)
+			push_front(Temp->Data);
+
+		return *this;
+	}
+
+	List& operator=(List&& other)
+	{
+		if (this == &other) return *this;
+
+		while (Head)pop_front();
+		while (Tail)pop_back();
+		this->Head = other.Head;
+		this->Tail = other.Tail;
+		this->size - other.size;
+		other.Head = nullptr;
+		other.Tail = nullptr;
+		other.size = 0;
+		return *this;
+	}
+
 	//------------------------Adding List---------------------------
 
 	void push_front(int Data)
@@ -170,13 +231,15 @@ public:
 	}
 };
 
-
+//#define METHODS_INSERT_ERESE
 
 void main()
 {
 	setlocale(LC_ALL, "");
 	int n;
 	cout << "¬ведите размер списка: "; cin >> n;
+
+#ifdef METHODS_INSERT_ERESE
 
 	List list;
 	for (int i = 0; i < n; i++)
@@ -203,4 +266,14 @@ void main()
 	cout << delimeter << endl;
 	list.reverse_print();
 
+#endif // METHODS_INSERT_ERESE
+
+
+	List list = { 3, 5, 8, 13, 21 };
+	/*for (int i : list)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+	*/
 }
