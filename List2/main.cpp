@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 using namespace std;
 
 using std::cin;
@@ -171,17 +171,16 @@ public:
 		}
 		else
 		{
-			/*
-			//ñîçäàåì íîâûé ýëåìåíò
+			//ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ Ð½Ð¾Ð²Ñ‹Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚
 			Element* New = new Element(Data);
-			//ïðèñòûêîâûâàåì íîâûé ýëåìåíò ê ñïèñêó
+			//Ð¿Ñ€Ð¸ÑÑ‚Ñ‹ÐºÐ¾Ð²Ñ‹Ð²Ð°ÐµÐ¼ Ð½Ð¾Ð²Ñ‹Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ðº ÑÐ¿Ð¸ÑÐºÑƒ
 			New->pNext = Head;
-			//ïðèñòûêîâûâàåì ñïèñîê ê íîâîìó ýëåìåíòó
+			//Ð¿Ñ€Ð¸ÑÑ‚Ñ‹ÐºÐ¾Ð²Ñ‹Ð²Ð°ÐµÐ¼ ÑÐ¿Ð¸ÑÐ¾Ðº Ðº Ð½Ð¾Ð²Ð¾Ð¼Ñƒ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ñƒ
 			Head->pPrev = New;
-			//ïååâîäèì ãîëîâó íà íîâûé ýëååìíò
+			//Ð¿ÐµÐµÐ²Ð¾Ð´Ð¸Ð¼ Ð³Ð¾Ð»Ð¾Ð²Ñƒ Ð½Ð° Ð½Ð¾Ð²Ñ‹Ð¹ ÑÐ»ÐµÐµÐ¼Ð½Ñ‚
 			Head = New;
-			*/
-			Head = new Element(Data, Head, Tail);
+
+			//Head = new Element(Data, Head, Tail);  ??????
 		}
 		size++;
 	}
@@ -189,12 +188,13 @@ public:
 	void push_back(int Data)
 	{
 		if (Head == nullptr && Tail == nullptr)return push_front(Data);
+
 		Element* New = new Element(Data);
 		New->pPrev = Tail;
 		Tail->pNext = New;
 		Tail = New;
 
-		//Tail = new Element(Data, ,Tail);
+		//Tail = new Element(Data, Tail, Head); ?????
 		size++;
 	}
 
@@ -213,12 +213,12 @@ public:
 			Temp = Tail;
 			for (int i = 0; i < size - Index - 1; i++)Temp = Temp->pPrev;
 		}
-		//ñîçäàåì íîâûé ýëåìåíò
+		//ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ Ð½Ð¾Ð²Ñ‹Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚
 		Element* New = new Element(Data);
-		//ïðèöåïëÿåì íîâûé ýëåìåíò ê ñïèñêó
+		//Ð¿Ñ€Ð¸Ñ†ÐµÐ¿Ð»ÑÐµÐ¼ Ð½Ð¾Ð²Ñ‹Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ðº ÑÐ¿Ð¸ÑÐºÑƒ
 		New->pNext = Temp;
 		New->pPrev = Temp->pPrev;
-		//ïðèöåïëÿåì ñïèñîê ê íîâîìó ýëåìåíòó
+		//Ð¿Ñ€Ð¸Ñ†ÐµÐ¿Ð»ÑÐµÐ¼ ÑÐ¿Ð¸ÑÐ¾Ðº Ðº Ð½Ð¾Ð²Ð¾Ð¼Ñƒ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ñƒ
 		Temp->pPrev->pNext = New;
 		Temp->pPrev = New;
 		size++;
@@ -278,18 +278,19 @@ public:
 	{
 		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-		cout << "Êîëè÷åñòâî ýëåìåíòîâ ê ñïèñêå :" << size << endl;
+		cout << "ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ðº ÑÐ¿Ð¸ÑÐºÐµ :" << size << endl;
 	}
 
 	void reverse_print()const
 	{
 		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
 			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-		cout << "Êîëè÷åñòâîë æëåìåíòîâ â ñïèñêå :" << size << endl;
+		cout << "ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾Ð» Ð¶Ð»ÐµÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð² ÑÐ¿Ð¸ÑÐºÐµ :" << size << endl;
 	}
 };
 
 //#define METHODS_INSERT_ERESE
+//#define H_W
 
 void main()
 {
@@ -297,7 +298,7 @@ void main()
 
 #ifdef METHODS_INSERT_ERESE
 	int n;
-	cout << "Ââåäèòå ðàçìåð ñïèñêà: "; cin >> n;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ€Ð°Ð·Ð¼ÐµÑ€ ÑÐ¿Ð¸ÑÐºÐ°: "; cin >> n;
 
 
 	List list;
@@ -311,20 +312,22 @@ void main()
 
 	int value;
 	int index;
-	cout << "Ââåäèòå èíäåêñ äîáàâëÿåìîãî ýëåìåíòà: "; cin >> index;
-	cout << "Ââåäèòå çíà÷åíèå äîáàâëÿåìîãî ýëåìåíòà: "; cin >> value;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¸Ð½Ð´ÐµÐºÑ Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼Ð¾Ð³Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð°: "; cin >> index;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼Ð¾Ð³Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð°: "; cin >> value;
 	list.insert(value, index);
 	list.print();
 	cout << delimeter << endl;
 	list.reverse_print();
 
-	cout << "Ââåäèòå èíäåêñ óäàëÿåìîãî ýëåìåíòà: "; cin >> index;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¸Ð½Ð´ÐµÐºÑ ÑƒÐ´Ð°Ð»ÑÐµÐ¼Ð¾Ð³Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð°: "; cin >> index;
 	list.erese(index);
 	list.print();
 	cout << delimeter << endl;
 	list.reverse_print();
 
 #endif // METHODS_INSERT_ERESE
+
+#ifdef H_W
 
 	List list = { 3, 5, 8, 13, 21 };
 	for (int i : list)
@@ -337,4 +340,5 @@ void main()
 	cout << delimeter << endl;
 	list.reverse_print();
 
+#endif // H_W
 }
