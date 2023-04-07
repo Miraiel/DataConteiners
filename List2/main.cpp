@@ -45,13 +45,12 @@ class List
 
 		bool operator!=(const Iterator& other)const
 		{
-			return this->Temp == other.Temp;
+			return this->Temp != other.Temp;
 		}
 
 		Iterator& operator++()
 		{
 			Temp = Temp->pNext;
-			Temp = Temp->pPrev;
 			return *this;
 		}
 
@@ -242,7 +241,7 @@ public:
 		if (Head == Tail)return pop_front();
 		Tail = Tail->pPrev;
 		delete Tail->pNext;
-		Tail->pPrev = nullptr;
+		Tail->pNext = nullptr;
 		size--;
 	}
 
@@ -287,7 +286,7 @@ public:
 };
 
 //#define METHODS_INSERT_ERESE
-//#define H_W
+#define H_W
 
 void main()
 {
