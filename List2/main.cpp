@@ -27,14 +27,17 @@ class List
 		}
 		friend class List;
 		friend class Iterator;
-		friend class ConstIterator;
 	}*Head, * Tail;
+
+	size_t size;
+
+public:
 
 	class Iterator
 	{
 		Element* Temp;
 	public:
-		Iterator(Element* Temp) :Temp(Temp)
+		Iterator(Element* Temp = nullptr) :Temp(Temp)
 		{
 			cout << "ITConstructor:\t" << this << endl;
 		}
@@ -43,15 +46,45 @@ class List
 			cout << "ITDestructor:\t" << this << endl;
 		}
 
+		Iterator& operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		
+		Iterator& operator--()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+
+		Iterator operator++(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+		
+		Iterator operator--(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+
+		bool operator==(const Iterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+
 		bool operator!=(const Iterator& other)const
 		{
 			return this->Temp != other.Temp;
 		}
 
-		Iterator& operator++()
+		int& operator*()const
 		{
-			Temp = Temp->pNext;
-			return *this;
+			return Temp->Data;
 		}
 
 		int& operator*()
@@ -60,22 +93,66 @@ class List
 		}
 	};
 
-	class ConstIterator
+	class ReverseIterator
 	{
 		Element* Temp;
 	public:
-		ConstIterator(Element* Temp) :Temp(Temp)
+		ReverseIterator(Element* Temp) : Temp(Temp)
 		{
-			cout << "ITConstructor:\t" << this << endl;
+			cout << "RIConstructro:\t" << this << endl;
 		}
-		~ConstIterator()
+
+		~ReverseIterator()
 		{
-			cout << "ITDestructor:\t" << this << endl;
+			cout << "RIDestructor:\t" << this << endl;
+		}
+
+		ReverseIterator& operator++()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+
+		ReverseIterator& operator--()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		
+		ReverseIterator& operator++(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+
+		ReverseIterator& operator--(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+
+		bool operator==(const ReverseIterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		
+		bool operator!=(const ReverseIterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+
+		const int& operator*()const
+		{
+			return Temp->Data;
+		}
+		
+		int& operator*()
+		{
+			return Temp->Data;
 		}
 	};
-
-	size_t size;
-public:
 
 	Iterator begin()
 	{
@@ -84,17 +161,17 @@ public:
 
 	Iterator end()
 	{
+		return nullptr;
+	}
+
+	ReverseIterator rbegin()
+	{
 		return Tail;
 	}
 
-	const ConstIterator begin()const
+	ReverseIterator rend()
 	{
-		return Head;
-	}
-
-	const ConstIterator end()const
-	{
-		return Tail;
+		return nullptr;
 	}
 
 	List()
@@ -150,7 +227,7 @@ public:
 		while (Tail)pop_back();
 		this->Head = other.Head;
 		this->Tail = other.Tail;
-		this->size - other.size;
+		this->size = other.size;
 		other.Head = other.Tail = nullptr;
 		other.size = size_t();
 		return *this;
@@ -160,11 +237,14 @@ public:
 
 	void push_front(int Data)
 	{
+
 		if (Head == nullptr && Tail == nullptr)
 		{
 			Head = Tail = new Element(Data);
+			size++;
+			return;
 		}
-		else
+		/*else
 		{
 			//создаем новый элемент
 			Element* New = new Element(Data);
@@ -174,22 +254,21 @@ public:
 			Head->pPrev = New;
 			//пееводим голову на новый элеемнт
 			Head = New;
-
-			//Head = new Element(Data, Head, Tail);  ??????
-		}
+		}*/
+		Head = Head->pPrev = new Element(Data, Head);
 		size++;
 	}
 
 	void push_back(int Data)
 	{
 		if (Head == nullptr && Tail == nullptr)return push_front(Data);
-
+		/*
 		Element* New = new Element(Data);
 		New->pPrev = Tail;
 		Tail->pNext = New;
 		Tail = New;
-
-		//Tail = new Element(Data, Tail, Head); ?????
+		*/
+		Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 		size++;
 	}
 
@@ -208,7 +287,7 @@ public:
 			Temp = Tail;
 			for (int i = 0; i < size - Index - 1; i++)Temp = Temp->pPrev;
 		}
-		//создаем новый элемент
+		/*//создаем новый элемент
 		Element* New = new Element(Data);
 		//прицепляем новый элемент к списку
 		New->pNext = Temp;
@@ -216,6 +295,8 @@ public:
 		//прицепляем список к новому элементу
 		Temp->pPrev->pNext = New;
 		Temp->pPrev = New;
+		*/
+		Temp->pPrev = Temp->pPrev->pNext = new Element(Data, Temp, Temp->pPrev);
 		size++;
 	}
 
@@ -335,6 +416,12 @@ void main()
 	list.print();
 	cout << delimeter << endl;
 	list.reverse_print();
+
+	for (List::ReverseIterator it = list.rbegin(); it != list.rend(); ++it)
+	{
+		cout << *it << tab;
+	}
+	cout << endl;
 
 #endif // H_W
 }
