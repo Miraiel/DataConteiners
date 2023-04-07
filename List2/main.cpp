@@ -1,4 +1,4 @@
-﻿#include<iostream>
+#include<iostream>
 using namespace std;
 
 using std::cin;
@@ -119,14 +119,15 @@ public:
 		*this = other;
 	}
 
-	List(List&& other) : List()
+	List(List&& other) : Head(other.Head), Tail(other.Tail), size(other.size)
 	{
-		*this = move(other);
+		other.Head = other.Tail = nullptr;
+		other.size = size_t();
 	}
 
 	~List()
 	{
-		while (Head)pop_front();
+		//while (Head)pop_front();
 		while (Tail)pop_back();
 		cout << "LDesturctor:\t" << this << endl;
 	}
@@ -138,10 +139,6 @@ public:
 		while (Head)pop_front();
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_back(Temp->Data);
-
-		/*while (Tail)pop_back();
-		for (Element* Temp = other.Tail; Temp; Temp = Temp->pPrev)
-			push_front(Temp->Data);*/
 
 		return *this;
 	}
@@ -155,9 +152,8 @@ public:
 		this->Head = other.Head;
 		this->Tail = other.Tail;
 		this->size - other.size;
-		other.Head = nullptr;
-		other.Tail = nullptr;
-		other.size = 0;
+		other.Head = other.Tail = nullptr;
+		other.size = size_t();
 		return *this;
 	}
 
@@ -252,8 +248,9 @@ public:
 
 	void erese(int Index)
 	{
+		if (Head == nullptr && Tail == nullptr)return;
 		if (Index > size)return;
-		if (Index == 0)return pop_front();
+		if (Index == 0 && Head == Tail)return pop_front();
 		Element* Temp;
 		if (Index < size / 2)
 		{
