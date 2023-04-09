@@ -92,7 +92,6 @@ public:
 
 	class ConstReverseIterator:public ConstBaseIterator
 	{
-		Element* Temp;
 	public:
 		ConstReverseIterator(Element* Temp) : ConstBaseIterator(Temp){}
 		~ConstReverseIterator(){}
@@ -156,12 +155,12 @@ public:
 		return nullptr;
 	}
 	
-	const Iterator begin()
+	Iterator begin()
 	{
 		return Head;
 	}
 
-	const Iterator end()
+	Iterator end()
 	{
 		return nullptr;
 	}
@@ -171,17 +170,17 @@ public:
 		return Tail;
 	}
 
-	const ReverseIterator rend()
+	const ConstReverseIterator rend()const
 	{
 		return nullptr;
 	}
 
-	const ReverseIterator rbegin()
+	ReverseIterator rbegin()
 	{
 		return Tail;
 	}
 
-	const ReverseIterator rend()
+	ReverseIterator rend()
 	{
 		return nullptr;
 	}
