@@ -445,11 +445,26 @@ void main()
 
 #endif // ITERATORS_CHECK
 
+<<<<<<< Updated upstream
 	List list1 = { 3, 5, 8, 13, 21 };
 	List list2 = { 34, 55, 89 };
 	List list3 = list1 + list2;
 	for (int i : list1)cout << i << tab; cout << endl;
 	for (int i : list2)cout << i << tab; cout << endl;
 	for (int i : list3)cout << i << tab; cout << endl;
+=======
+	List<int> list1 = { 3, 5, 8, 13, 21 };
+	List<int> list2 = { 34, 55, 89 };
+	List<int> list3 = list1 + list2;
+	//for (<int> i : list1)cout << i << tab; cout << endl;
+	//for (<int> i : list2)cout << i << tab; cout << endl;
+	//for (<int> i : list3)cout << i << tab; cout << endl;
+
+    for (list<int>::ReverseIterator<int> it = list3.rbegin(); it != list3.rend(); ++it)
+    {
+        cout << *it << tab;
+    }
+    cout << endl;
+>>>>>>> Stashed changes
 
 }
