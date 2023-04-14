@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 using namespace std;
 
 int Fibonacci(int n)
@@ -13,7 +13,7 @@ void main()
 {
 	setlocale(LC_ALL, "");
 	int n;
-	cout << "Ââåäèòå ÷èñëî: "; cin >> n;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾: "; cin >> n;
 	for (int i = 0; i < n; i++)
 	{
 		cout << i << ":" << Fibonacci(i) << endl;
