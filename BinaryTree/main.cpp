@@ -62,9 +62,9 @@ public:
 	{
 		if (Root!= NULL)
 		{
-			if(Clear(Root->pLeft);
+			Clear(Root->pLeft);
 			Clear(Root->pRight);
-			Clear(Root);
+			delete Root;
 		}
 	}
 
@@ -171,6 +171,7 @@ public:
 		}
 
 		// если у элемента есть оба потомка
+		//???????????????????
 	}
 
 	void print(Element* Root)const
