@@ -212,13 +212,11 @@ private:
 	void print_tree(Element* Root, int level)const
 	{
 		if (Root == nullptr)return;
-		if (Root)
-		{
-			print_tree(Root->pLeft, level + 1);
-			for (int i = 0; i < level; i++)cout << "   ";
-			cout << Root->Data << endl;
-			print_tree(Root->pRight, level + 1);
-		}
+		print_tree(Root->pLeft, level + 1);
+		for (int i = 0; i < level; i++)cout << "   ";
+		cout << Root->Data << endl;
+		print_tree(Root->pRight, level + 1);
+
 
 	}
 
@@ -313,7 +311,7 @@ void main()
 	tree.print();
 	cout << endl;
 	cout << "Глубина дерева: " << tree.Depth() << endl;
-	
+
 	int value;
 	cout << "Введите удаляемое значение: "; cin >> value;
 	tree.erase(value);
@@ -323,4 +321,4 @@ void main()
 
 
 #endif // DEPTH_CHECK
-	}
+}
